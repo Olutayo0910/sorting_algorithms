@@ -16,8 +16,7 @@ void merge_subarray(int *subarr, int *buff, size_t front, size_t mid,
 void merge_subarray(int *subarr, int *buff, size_t front, size_t mid,
 		  size_t back)
 {
-size_t i, j = 0 
-k = 0;
+size_t i, j, k = 0;
 
 printf("Merging...\n[left]: ");
 print_array(subarr + front, mid - front);
