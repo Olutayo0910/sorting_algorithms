@@ -1,77 +1,83 @@
 #include "sort.h"
 
+void merge_recursive(int *subarr, int *buff, size_t front, size_t back);
+void merge_sort(int *array, size_t size);
+void merge_subarray(int *subarr, int *buff, size_t front, size_t mid,
+		  size_t back);
+
 /**
- * lomuto_partition - Lomuto partition scheme for Quick Sort
- * @array: The array to be sorted
- * @low: The starting index of the partition
- * @high: The ending index of the partition
- * @size: The size of the array
+ * merge_subarr - Sort a subarray of integers.
+ * @subarr: subarray of an array of int to sort.
+ * @buff: A buffer to store the sorted subarray.
+ * @front: The front index.
+ * @mid: The middle index.
+ * @back: The back index.
+ */
+void merge_subarray(int *subarr, int *buff, size_t front, size_t mid,
+		  size_t back)
+{
+size_t i, j = 0 
+k = 0;
+
+printf("Merging...\n[left]: ");
+print_array(subarr + front, mid - front);
+
+printf("[right]: ");
+print_array(subarr + mid, back - mid);
+
+for (i = front, j = mid; i < mid && j < back; k++)
+buff[k] = (subarr[i] < subarr[j]) ? subarr[i++] : subarr[j++];
+for (; i < mid; i++)
+buff[k++] = subarr[i];
+for (; j < back; j++)
+buff[k++] = subarr[j];
+for (i = front, k = 0; i < back; i++)
+subarr[i] = buff[k++];
+
+printf("[Done]: ");
+print_array(subarr + front, back - front);
+}
+
+/**
+ * merge_recursive - Implement the merge sort algorithm
+ * @subarr: subarray of an array of integers to sort.
+ * @buff: A buffer to store the result.
+ * @front: The front index
+ * @back: The back index
+ */
+void merge_recursive(int *subarr, int *buff, size_t front, size_t back)
+{
+size_t mid;
+
+if (back - front > 1)
+{
+mid = front + (back - front) / 2;
+merge_recursive(subarr, buff, front, mid);
+merge_recursive(subarr, buff, mid, back);
+merge_subarray(subarr, buff, front, mid, back);
+}
+}
+
+/**
+ * merge_sort - Sort an array of integers in ascending
+ *              order.
+ * @array: An array of integers.
+ * @size: The size of the array.
  *
- * Return: Index of the pivot element
+ * Description: Implements the top-down merge sort algorithm.
  */
-int lomuto_partition(int *array, int low, int high, size_t size)
+void merge_sort(int *array, size_t size)
 {
-	int pivot = array[high]; /* Pivot is the last element */
-	int i = low - 1; /* Index of smaller element */
+int *buff;
 
-	for (int j = low; j <= high - 1; j++)
-	{
-		/* If current element is smaller or equal to the pivot */
-		if (array[j] <= pivot)
-		{
-			i++;
-			/* Swap array[i] and array[j] */
-			if (i != j)
-			{
-				int temp = array[i];
-				array[i] = array[j];
-				array[j] = temp;
-				print_array(array, size);
-			}
-		}
-	}
+if (array == NULL || size < 2)
+return;
 
-	/* Swap the pivot element with the element at index i+1 */
-	if (i + 1 != high)
-	{
-		int temp = array[i + 1];
-		array[i + 1] = array[high];
-		array[high] = temp;
-		print_array(array, size);
-	}
+buff = malloc(sizeof(int) * size);
+if (buff == NULL)
+return;
 
-	return i + 1; /* Return the index of the pivot element */
-}
+merge_recursive(array, buff, 0, size);
 
-/**
- * quick_sort_recursive - Recursively applies Quick Sort algorithm
- * @array: The array to be sorted
- * @low: The starting index of the partition
- * @high: The ending index of the partition
- * @size: The size of the array
- */
-void quick_sort_recursive(int *array, int low, int high, size_t size)
-{
-	if (low < high)
-	{
-		/* Partition the array into two subarrays */
-		int pi = lomuto_partition(array, low, high, size);
-
-		/* Recursively sort the subarrays */
-		quick_sort_recursive(array, low, pi - 1, size);
-		quick_sort_recursive(array, pi + 1, high, size);
-	}
-}
-
-/**
- * quick_sort - Sorts an array of integers in ascending order using Quick Sort
- * @array: The array to be sorted
- * @size: The size of the array
- */
-void quick_sort(int *array, size_t size)
-{
-	if (array == NULL || size <= 1)
-		return;
-
-	quick_sort_recursive(array, 0, size - 1, size);
+free(buff);
 }
