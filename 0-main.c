@@ -1,4 +1,5 @@
 #include "sort.h"
+
 /**
  * main - Entry point
  *
@@ -11,7 +12,7 @@ int main(void)
 
     print_array(array, n);
     printf("\n");
-    merge_sort(array, n);
+    quick_sort(array, n);
     printf("\n");
     print_array(array, n);
     return (0);
